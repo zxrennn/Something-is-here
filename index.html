@@ -236,7 +236,7 @@ footer{border-top:0.5px solid var(--border);padding:1.4rem 2rem;display:flex;jus
   <section class="hero">
     <div class="h-grid"></div><div class="h-vig"></div><div class="h-eye"></div>
     <div class="h-cnt">
-      <div class="v2badge">v2.1.2 — Multiplayer Fixes</div>
+      <div class="v2badge">v2.2.0 — Dev Support</div>
       <p class="eyebrow">⚠ Survival Horror ⚠</p>
       <h1 class="htitle">Something<br>Is Here</h1>
       <p class="hsub">Hide. Survive. Escape. Don't let it find you.</p>
@@ -517,16 +517,15 @@ footer{border-top:0.5px solid var(--border);padding:1.4rem 2rem;display:flex;jus
     <h2 class="stitle">Patch Notes</h2>
     <div class="dl-list">
       <div class="dl-e">
-        <div class="dl-hd"><span class="dl-v">v2.1.2</span><span class="dl-dt">Mar 2026</span></div>
-        <div class="dl-tag new">Multiplayer Fixes</div>
+        <div class="dl-hd"><span class="dl-v">v2.2.0</span><span class="dl-dt">Mar 2026</span></div>
+        <div class="dl-tag new">Dev Support</div>
         <ul class="dl-items">
-          <li>Creating a new game now fully resets previous session state — no leftover data from last game</li>
-          <li>Skin selector in profile now only shows skins you actually own</li>
-          <li>Skin selector syncs with your currently equipped skin from the shop</li>
-          <li>Buying a new skin in the shop immediately updates the multiplayer skin dropdown</li>
-          <li>Leaving a room no longer disconnects from the server — can rejoin or create instantly</li>
-          <li>Chat cleared when leaving a room</li>
-          <li>Game canvas loop properly cancelled when returning to lobby</li>
+          <li>Hidden dev panel — triple-click the footer logo and enter access code</li>
+          <li>Broadcast announcements to all players in real time</li>
+          <li>Add coins locally for testing shop features</li>
+          <li>Unlock all 9 levels instantly</li>
+          <li>Full localStorage wipe for clean resets</li>
+          <li>Broadcasts appear as a banner across the top of the screen</li>
         </ul>
       </div>
 
@@ -534,11 +533,10 @@ footer{border-top:0.5px solid var(--border);padding:1.4rem 2rem;display:flex;jus
         <div class="dl-hd"><span class="dl-v">v2.1.2</span><span class="dl-dt">Mar 2026</span></div>
         <div class="dl-tag new">Multiplayer Fixes</div>
         <ul class="dl-items">
-          <li>Creating a new room now fully resets previous game state — no leftover players or scores from last session</li>
-          <li>Profile skin selector now only shows skins you actually own — synced with shop purchases</li>
-          <li>Skin selection syncs live when you buy from the shop</li>
-          <li>Leaving a room properly resets the gamemode selector back to Co-op Escape</li>
-          <li>Navigating to Multiplayer tab always shows a fresh setup screen if not in an active room</li>
+          <li>Creating a new room now fully resets previous game state</li>
+          <li>Profile skin selector only shows owned skins, synced with shop</li>
+          <li>Leaving a room properly resets gamemode selector</li>
+          <li>Navigating to Multiplayer always shows a fresh setup screen</li>
           <li>Chat history clears when leaving or creating a new room</li>
         </ul>
       </div>
@@ -625,9 +623,48 @@ footer{border-top:0.5px solid var(--border);padding:1.4rem 2rem;display:flex;jus
   </div>
 </div>
 
+<!-- DEV PANEL -->
+<div id="dev-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:5000;align-items:center;justify-content:center">
+  <div style="background:#0a0a12;border:0.5px solid #534AB7;border-radius:6px;padding:1.6rem 2rem;width:100%;max-width:420px;position:relative">
+    <div style="font-family:var(--font-m);font-size:.65rem;letter-spacing:4px;color:#534AB7;text-transform:uppercase;margin-bottom:1.2rem">Dev Panel — Something Is Here</div>
+
+    <div style="border-bottom:0.5px solid #1a1a2e;padding-bottom:1.2rem;margin-bottom:1.2rem">
+      <div style="font-family:var(--font-m);font-size:.62rem;letter-spacing:3px;color:#555;text-transform:uppercase;margin-bottom:.7rem">Broadcast announcement</div>
+      <textarea id="dev-announce-text" placeholder="Type your announcement..." maxlength="200" style="width:100%;background:#05050a;border:0.5px solid #1a1a2e;color:var(--text);font-family:var(--font-m);font-size:.75rem;padding:.6rem .8rem;border-radius:3px;resize:vertical;min-height:70px;margin-bottom:.6rem"></textarea>
+      <button onclick="devBroadcast()" style="background:rgba(127,119,221,.15);border:0.5px solid #534AB7;color:#AFA9EC;font-family:var(--font-m);font-size:.68rem;letter-spacing:2px;padding:.5rem 1.2rem;border-radius:2px;cursor:pointer;text-transform:uppercase;width:100%">Broadcast to all players</button>
+    </div>
+
+    <div style="border-bottom:0.5px solid #1a1a2e;padding-bottom:1.2rem;margin-bottom:1.2rem">
+      <div style="font-family:var(--font-m);font-size:.62rem;letter-spacing:3px;color:#555;text-transform:uppercase;margin-bottom:.7rem">Add coins (local)</div>
+      <div style="display:flex;gap:.5rem">
+        <input id="dev-coins-amt" type="number" placeholder="Amount" min="1" max="99999" style="flex:1;background:#05050a;border:0.5px solid #1a1a2e;color:var(--text);font-family:var(--font-m);font-size:.75rem;padding:.5rem .7rem;border-radius:3px">
+        <button onclick="devAddCoins()" style="background:rgba(239,159,39,.12);border:0.5px solid #854F0B;color:#EF9F27;font-family:var(--font-m);font-size:.68rem;letter-spacing:2px;padding:.5rem 1rem;border-radius:2px;cursor:pointer;text-transform:uppercase">Add</button>
+      </div>
+    </div>
+
+    <div style="border-bottom:0.5px solid #1a1a2e;padding-bottom:1.2rem;margin-bottom:1.2rem">
+      <div style="font-family:var(--font-m);font-size:.62rem;letter-spacing:3px;color:#555;text-transform:uppercase;margin-bottom:.7rem">Unlock all levels</div>
+      <button onclick="devUnlockAll()" style="background:rgba(192,57,43,.12);border:0.5px solid var(--red-dim);color:#E24B4A;font-family:var(--font-m);font-size:.68rem;letter-spacing:2px;padding:.5rem 1.2rem;border-radius:2px;cursor:pointer;text-transform:uppercase;width:100%">Unlock levels 1–9</button>
+    </div>
+
+    <div>
+      <div style="font-family:var(--font-m);font-size:.62rem;letter-spacing:3px;color:#555;text-transform:uppercase;margin-bottom:.7rem">Reset all progress</div>
+      <button onclick="devReset()" style="background:transparent;border:0.5px solid #222;color:#444;font-family:var(--font-m);font-size:.68rem;letter-spacing:2px;padding:.5rem 1.2rem;border-radius:2px;cursor:pointer;text-transform:uppercase;width:100%">Wipe localStorage</button>
+    </div>
+
+    <button onclick="closeDev()" style="position:absolute;top:.8rem;right:.8rem;background:transparent;border:none;color:#444;font-size:1.1rem;cursor:pointer;font-family:monospace">✕</button>
+  </div>
+</div>
+
+<!-- broadcast toast (separate from normal toast) -->
+<div id="broadcast-bar" style="display:none;position:fixed;top:0;left:0;right:0;background:#1a1040;border-bottom:0.5px solid #534AB7;padding:.6rem 2rem;z-index:4000;font-family:var(--font-m);font-size:.75rem;color:#AFA9EC;text-align:center;letter-spacing:1px">
+  <span id="broadcast-text"></span>
+  <button onclick="document.getElementById('broadcast-bar').style.display='none'" style="background:transparent;border:none;color:#534AB7;cursor:pointer;margin-left:1rem;font-size:.8rem">✕</button>
+</div>
+
 <footer>
-  <span class="fl">Something Is Here</span>
-  <span class="fc">v2.1.2 — © 2026</span>
+  <span class="fl" onclick="devTrigger()" style="cursor:default">Something Is Here</span>
+  <span class="fc">v2.2.0 — © 2026</span>
 </footer>
 
 <div id="toast"></div>
@@ -1430,7 +1467,86 @@ function mpDrawGame(){
 // ══════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════
-// Auto-connect to server
+// ══════════════════════════════════════════════════════════════════
+// DEV PANEL
+// ══════════════════════════════════════════════════════════════════
+const DEV_PASS = 'SIH!';
+let devClickCount = 0, devClickTimer = null;
+
+function devTrigger() {
+  // Triple-click the footer logo to prompt password
+  devClickCount++;
+  clearTimeout(devClickTimer);
+  devClickTimer = setTimeout(() => devClickCount = 0, 800);
+  if (devClickCount >= 3) {
+    devClickCount = 0;
+    const pw = prompt('Dev access code:');
+    if (pw === DEV_PASS) openDev();
+    else if (pw !== null) toast('Wrong code.');
+  }
+}
+
+function openDev() {
+  const el = document.getElementById('dev-overlay');
+  el.style.display = 'flex';
+}
+
+function closeDev() {
+  document.getElementById('dev-overlay').style.display = 'none';
+}
+
+function devBroadcast() {
+  const text = document.getElementById('dev-announce-text').value.trim();
+  if (!text) { toast('Enter a message first.'); return; }
+  // Show broadcast bar locally
+  showBroadcast(text);
+  // Send via WS if connected
+  if (ws && ws.readyState === 1) {
+    ws.send(JSON.stringify({ type: 'chat', text: '📢 [DEV] ' + text }));
+  }
+  document.getElementById('dev-announce-text').value = '';
+  toast('Broadcast sent!');
+}
+
+function showBroadcast(text) {
+  const bar = document.getElementById('broadcast-bar');
+  document.getElementById('broadcast-text').textContent = text;
+  bar.style.display = 'block';
+  clearTimeout(bar._t);
+  bar._t = setTimeout(() => bar.style.display = 'none', 12000);
+}
+
+function devAddCoins() {
+  const amt = parseInt(document.getElementById('dev-coins-amt').value);
+  if (!amt || amt < 1) { toast('Enter a valid amount.'); return; }
+  addCoins(amt);
+  toast('Added 🪙 ' + amt + ' coins.');
+  document.getElementById('dev-coins-amt').value = '';
+}
+
+function devUnlockAll() {
+  unlockedLevel = 9;
+  localStorage.setItem('sih_unlocked', '9');
+  toast('All levels unlocked!');
+}
+
+function devReset() {
+  if (!confirm('Wipe ALL progress? Coins, levels, owned items — everything.')) return;
+  localStorage.clear();
+  toast('Progress wiped. Refresh the page.');
+  closeDev();
+}
+
+// Listen for broadcast messages from server
+const _origHandleMsg = mpHandleMsg;
+// Patch chat handler to show broadcasts
+const _origAddChat = mpAddChat;
+function mpAddChat(entry) {
+  _origAddChat(entry);
+  if (entry.text && entry.text.startsWith('📢 [DEV]')) {
+    showBroadcast(entry.text.replace('📢 [DEV] ', ''));
+  }
+}
 const SERVER_URL = 'wss://something-is-here-production.up.railway.app';
 function mpConnect(url){
   url = url || SERVER_URL;
