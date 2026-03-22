@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something Is Here</title>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05050a;--surface:#0c0c14;--border:#1a1a2e;
+  --red:#c0392b;--red-dim:#7a1f16;
+  --purple:#7F77DD;--purple-dim:#3C3489;
+  --text:#c8c8d4;--muted:#555566;
+  --font-horror:'Creepster',cursive;
+  --font-mono:'Share Tech Mono',monospace;
+  --font-body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:9999}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:200;background:rgba(5,5,10,0.95);backdrop-filter:blur(8px)}
+.nav-logo{font-family:var(--font-horror);font-size:1.4rem;color:var(--red);letter-spacing:2px;text-decoration:none;cursor:pointer}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;text-decoration:none;font-family:var(--font-mono);transition:color 0.2s;cursor:pointer}
+.nav-links a:hover{color:var(--text)}
+.nav-toggle{display:none;background:none;border:none;color:var(--text);font-size:1.2rem;cursor:pointer}
+@media(max-width:600px){
+  .nav-links{display:none;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--surface);border-bottom:0.5px solid var(--border);padding:1rem 2rem;gap:1rem}
+  .nav-links.open{display:flex}
+  .nav-toggle{display:block}
+}
+
+.page{display:none}.page.active{display:block}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.35}
+.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 20%,var(--bg) 75%)}
+.hero-eye{position:absolute;width:280px;height:280px;border-radius:50%;border:1px solid var(--red);opacity:0.05;animation:pulse-eye 4s ease-in-out infinite}
+@keyframes pulse-eye{0%,100%{transform:scale(1);opacity:0.05}50%{transform:scale(1.1);opacity:0.1}}
+.hero-content{position:relative;z-index:2}
+.eyebrow{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:4px;color:var(--red);margin-bottom:1.5rem;opacity:0;animation:fadeup 0.7s 0.2s forwards}
+h1.hero-title{font-family:var(--font-horror);font-size:clamp(3.5rem,10vw,7rem);color:#fff;letter-spacing:4px;line-height:1;margin-bottom:1.5rem;opacity:0;animation:fadeup 0.7s 0.4s forwards;text-shadow:0 0 60px rgba(192,57,43,0.35)}
+.hero-sub{font-size:0.9rem;color:var(--muted);max-width:380px;line-height:1.9;margin:0 auto 2.5rem;opacity:0;animation:fadeup 0.7s 0.6s forwards}
+.btn-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeup 0.7s 0.8s forwards}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.btn-red{background:var(--red);color:#fff;border:none;padding:0.85rem 2.2rem;font-family:var(--font-mono);font-size:0.8rem;letter-spacing:3px;text-transform:uppercase;border-radius:2px;cursor:pointer;transition:background 0.2s,transform 0.1s;display:inline-block}
+.btn-red:hover{background:#a93226;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--muted);border:0.5px solid var(--border);padding:0.85rem 1.8rem;font-family:var(--font-mono);font-size:0.8rem;letter-spacing:3px;text-transform:uppercase;border-radius:2px;cursor:pointer;transition:border-color 0.2s,color 0.2s;display:inline-block}
+.btn-ghost:hover{border-color:var(--muted);color:var(--text)}
+
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
+.feat{padding:1.8rem 1.4rem;border-right:0.5px solid var(--border);text-align:center}
+.feat:last-child{border-right:none}
+.feat-icon{font-size:1.3rem;margin-bottom:0.6rem;color:var(--red)}
+.feat-title{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:3px;color:var(--text);margin-bottom:0.3rem;text-transform:uppercase}
+.feat-desc{font-size:0.78rem;color:var(--muted);line-height:1.6}
+@media(max-width:600px){.feat{border-right:none;border-bottom:0.5px solid var(--border)}}
+
+.section{padding:4rem 2rem;max-width:900px;margin:0 auto}
+.section.narrow{max-width:700px}
+.sec-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:4px;color:var(--red);margin-bottom:0.8rem;text-transform:uppercase}
+.sec-title{font-family:var(--font-horror);font-size:clamp(2rem,5vw,3.2rem);color:#fff;margin-bottom:1rem;letter-spacing:2px}
+.sec-sub{font-size:0.88rem;color:var(--muted);line-height:1.9;margin-bottom:2rem}
+
+#game-wrap{width:100%;background:#000;border:0.5px solid var(--border);border-radius:4px;overflow:hidden}
+#game-hud{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:#0a0a12;border-bottom:0.5px solid #1a1a2e}
+.hud-block{display:flex;flex-direction:column;gap:3px}
+.hud-label{font-family:var(--font-mono);font-size:10px;letter-spacing:3px;color:#444;text-transform:uppercase}
+.hud-val{font-family:var(--font-mono);font-size:15px;font-weight:500;color:#ccc}
+#san-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+#san-bg{width:130px;height:5px;background:#111;border-radius:3px;overflow:hidden}
+#san-fill{height:100%;background:#7F77DD;width:100%;border-radius:3px;transition:width 0.25s,background 0.4s}
+#game-canvas-wrap{position:relative;width:100%;height:340px}
+#gc{display:block;width:100%;height:100%}
+
+.gov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,5,10,0.93);z-index:30;text-align:center;padding:1.5rem}
+.gov.hidden{display:none}
+.gov-title{font-family:var(--font-horror);font-size:clamp(2rem,6vw,3.8rem);color:#fff;letter-spacing:4px;text-shadow:0 0 30px rgba(192,57,43,0.4);margin-bottom:0.3rem}
+.gov-sub{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:1.2rem}
+.gov-body{font-size:0.8rem;color:#555;line-height:1.9;margin-bottom:1.5rem;max-width:280px}
+.gov-score{font-family:var(--font-horror);font-size:2.8rem;color:var(--purple);margin-bottom:0.2rem}
+.gov-slabel{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:3px;color:#444;margin-bottom:1.4rem}
+.gbtn-group{display:flex;gap:0.7rem;flex-wrap:wrap;justify-content:center}
+.gbtn{padding:0.6rem 1.4rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;border-radius:2px;cursor:pointer;border:none;transition:all 0.15s}
+.gbtn.red{background:var(--red);color:#fff}.gbtn.red:hover{background:#a93226}
+.gbtn.ghost{background:transparent;color:#555;border:0.5px solid #222}.gbtn.ghost:hover{border-color:#888;color:#ccc}
+.name-in{background:#0c0c14;border:0.5px solid #333;color:#ccc;padding:0.55rem 1rem;font-family:var(--font-mono);font-size:0.78rem;letter-spacing:2px;border-radius:2px;width:190px;text-align:center;margin-bottom:1rem;display:block}
+.name-in:focus{outline:none;border-color:var(--purple)}
+
+#dpad-wrap{display:none;position:absolute;bottom:12px;left:12px;z-index:25}
+.dpad{display:grid;grid-template-columns:42px 42px 42px;grid-template-rows:42px 42px 42px;gap:3px}
+.dp{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.12);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:#666;-webkit-tap-highlight-color:transparent;user-select:none}
+.dp:active,.dp.pressed{background:rgba(255,255,255,0.2)}
+.dp.blank{background:transparent;border:none}
+@media(max-width:700px){#dpad-wrap{display:block}}
+@media(pointer:coarse){#dpad-wrap{display:block}}
+
+.lb-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid var(--border)}
+.lb-row{display:grid;grid-template-columns:2rem 1fr auto auto;gap:1rem;align-items:center;padding:0.85rem 1rem;border-bottom:0.5px solid var(--border);transition:background 0.15s}
+.lb-row:hover{background:var(--surface)}
+.lb-row.hdr{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+.lb-rank{font-family:var(--font-mono);font-size:0.78rem;color:var(--muted)}
+.lb-rank.gold{color:#EF9F27}.lb-rank.silver{color:#B4B2A9}.lb-rank.bronze{color:#D85A30}
+.lb-name{font-size:0.88rem;color:var(--text)}
+.lb-score{font-family:var(--font-mono);font-size:0.88rem;color:var(--purple)}
+.lb-lv{font-family:var(--font-mono);font-size:0.78rem;color:var(--muted)}
+.lb-empty{text-align:center;padding:3rem;font-size:0.82rem;color:var(--muted);font-family:var(--font-mono)}
+
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:2rem}
+.how-card{background:var(--surface);border:0.5px solid var(--border);border-radius:4px;padding:1.4rem}
+.how-step{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:3px;color:var(--red);margin-bottom:0.7rem;text-transform:uppercase}
+.how-h{font-size:0.92rem;font-weight:500;color:#fff;margin-bottom:0.4rem}
+.how-d{font-size:0.8rem;color:var(--muted);line-height:1.7}
+.keys{display:flex;gap:5px;flex-wrap:wrap;margin-top:0.7rem}
+.key{display:inline-flex;align-items:center;justify-content:center;background:#111;border:0.5px solid #333;border-bottom:2px solid #333;border-radius:3px;padding:2px 7px;font-family:var(--font-mono);font-size:0.7rem;color:var(--text);min-width:26px}
+
+.credits-body{font-size:0.85rem;color:var(--muted);line-height:2.4;text-align:center}
+.credits-body a{color:var(--purple);text-decoration:none}
+.credits-body a:hover{text-decoration:underline}
+.credits-body strong{color:var(--text)}
+
+footer{border-top:0.5px solid var(--border);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+.foot-logo{font-family:var(--font-horror);color:var(--red-dim);font-size:1rem;letter-spacing:2px}
+.foot-copy{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo" onclick="showPage('home')">S·I·H</span>
+  <ul class="nav-links" id="nav-links">
+    <li><a onclick="showPage('play');closeNav()">Play</a></li>
+    <li><a onclick="showPage('how');closeNav()">How to play</a></li>
+    <li><a onclick="showPage('lb');closeNav()">Leaderboard</a></li>
+    <li><a onclick="showPage('credits');closeNav()">Credits</a></li>
+  </ul>
+  <button class="nav-toggle" id="nav-toggle">☰</button>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-vignette"></div>
+    <div class="hero-eye"></div>
+    <div class="hero-content">
+      <p class="eyebrow">⚠ Survival Horror ⚠</p>
+      <h1 class="hero-title">Something<br>Is Here</h1>
+      <p class="hero-sub">Hide in the dark. Collect the orbs.<br>Don't let it find you.</p>
+      <div class="btn-row">
+        <button class="btn-red" onclick="showPage('play')">Play Now</button>
+        <button class="btn-ghost" onclick="showPage('how')">How to play</button>
+      </div>
+    </div>
+  </section>
+  <div class="features">
+    <div class="feat"><div class="feat-icon">👁</div><div class="feat-title">Adaptive AI</div><div class="feat-desc">Patrol, search, chase — it hunts smarter each level.</div></div>
+    <div class="feat"><div class="feat-icon">🔊</div><div class="feat-title">Audio dread</div><div class="feat-desc">Procedural heartbeat and ambient tone react to danger.</div></div>
+    <div class="feat"><div class="feat-icon">🗺</div><div class="feat-title">Room system</div><div class="feat-desc">Carved rooms and corridors to navigate and hide in.</div></div>
+    <div class="feat"><div class="feat-icon">🧠</div><div class="feat-title">Sanity meter</div><div class="feat-desc">Proximity to the monster erodes your mind.</div></div>
+  </div>
+</div>
+
+<!-- PLAY -->
+<div class="page" id="page-play">
+  <div class="section">
+    <p class="sec-label">// Play</p>
+    <h2 class="sec-title">Enter the Dark</h2>
+    <p class="sec-sub">WASD or arrow keys to move. Stay in the shadows. Collect every orb to advance.</p>
+    <div id="game-wrap">
+      <div id="game-hud">
+        <div class="hud-block"><span class="hud-label">Score</span><span class="hud-val" id="h-score">0</span></div>
+        <div id="san-wrap"><span class="hud-label">Sanity</span><div id="san-bg"><div id="san-fill"></div></div></div>
+        <div class="hud-block" style="align-items:flex-end"><span class="hud-label">Level</span><span class="hud-val" id="h-level">1</span></div>
+        <button onclick="togglePause()" style="background:transparent;border:0.5px solid #222;color:#555;font-family:var(--font-mono);font-size:0.65rem;letter-spacing:2px;padding:4px 10px;border-radius:2px;cursor:pointer;text-transform:uppercase" id="pause-btn">Pause</button>
+      </div>
+      <div id="game-canvas-wrap">
+        <canvas id="gc"></canvas>
+        <div class="gov" id="gov-menu">
+          <div class="gov-title">Something<br>Is Here</div>
+          <div class="gov-sub">Survival Horror</div>
+          <div class="gov-body">Hide in the dark. Collect the orbs.<br>Don't let it find you.</div>
+          <div class="gbtn-group"><button class="gbtn red" onclick="startGame()">Begin</button></div>
+        </div>
+        <div class="gov hidden" id="gov-caught">
+          <div class="gov-title" style="color:var(--red)">Caught</div>
+          <div class="gov-sub">It found you</div>
+          <div class="gov-score" id="gs-caught">0</div>
+          <div class="gov-slabel">Final Score — Level <span id="gl-caught">1</span></div>
+          <input class="name-in" id="name1" placeholder="Your name" maxlength="16">
+          <div class="gbtn-group">
+            <button class="gbtn red" onclick="doSubmit('name1')">Submit score</button>
+            <button class="gbtn ghost" onclick="startGame()">Try again</button>
+            <button class="gbtn ghost" onclick="goMenu()">Menu</button>
+          </div>
+        </div>
+        <div class="gov hidden" id="gov-sanity">
+          <div class="gov-title" style="font-size:clamp(1.8rem,5vw,3rem)">Lost Your Mind</div>
+          <div class="gov-sub">Sanity reached zero</div>
+          <div class="gov-score" id="gs-sanity">0</div>
+          <div class="gov-slabel">Final Score — Level <span id="gl-sanity">1</span></div>
+          <input class="name-in" id="name2" placeholder="Your name" maxlength="16">
+          <div class="gbtn-group">
+            <button class="gbtn red" onclick="doSubmit('name2')">Submit score</button>
+            <button class="gbtn ghost" onclick="startGame()">Try again</button>
+            <button class="gbtn ghost" onclick="goMenu()">Menu</button>
+          </div>
+        </div>
+        <div class="gov hidden" id="gov-pause">
+          <div class="gov-title">Paused</div>
+          <div class="gov-sub">Take a breath</div>
+          <div class="gbtn-group">
+            <button class="gbtn red" onclick="resumeGame()">Resume</button>
+            <button class="gbtn ghost" onclick="goMenu()">Main menu</button>
+          </div>
+        </div>
+
+        <div id="dpad-wrap">
+          <div class="dpad">
+            <div class="dp blank"></div><div class="dp" id="dp-up">↑</div><div class="dp blank"></div>
+            <div class="dp" id="dp-left">←</div><div class="dp blank"></div><div class="dp" id="dp-right">→</div>
+            <div class="dp blank"></div><div class="dp" id="dp-down">↓</div><div class="dp blank"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO PLAY -->
+<div class="page" id="page-how">
+  <div class="section">
+    <p class="sec-label">// Instructions</p>
+    <h2 class="sec-title">How to play</h2>
+    <div class="how-grid">
+      <div class="how-card"><div class="how-step">Step 01</div><div class="how-h">Move through the maze</div><div class="how-d">Navigate dark corridors to find and collect all orbs.</div><div class="keys"><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span><span style="font-size:0.7rem;color:var(--muted);align-self:center">or arrows</span></div></div>
+      <div class="how-card"><div class="how-step">Step 02</div><div class="how-h">Collect all orbs</div><div class="how-d">Purple glowing orbs are scattered each level. Grab them all to advance.</div></div>
+      <div class="how-card"><div class="how-step">Step 03</div><div class="how-h">Hide in darkness</div><div class="how-d">Dark corners conceal you. Lit areas expose you — don't linger in the light.</div></div>
+      <div class="how-card"><div class="how-step">Step 04</div><div class="how-h">Watch your sanity</div><div class="how-d">Being near the monster drains sanity. Hit zero and it's over even without being touched.</div></div>
+      <div class="how-card"><div class="how-step">The monster</div><div class="how-h">Three-state AI</div><div class="how-d"><strong style="color:var(--muted)">Patrol</strong> — wanders randomly.<br><strong style="color:var(--muted)">Search</strong> — hunts your last position.<br><strong style="color:var(--muted)">Chase</strong> — sprints at you. A <span style="color:var(--red)">!</span> appears above it when it sees you.</div></div>
+      <div class="how-card"><div class="how-step">Scoring</div><div class="how-h">Points &amp; leaderboard</div><div class="how-d">Each orb scores 10 × your current level. Submit your name after death to appear on the leaderboard.</div></div>
+    </div>
+    <div style="margin-top:2.5rem;text-align:center"><button class="btn-red" onclick="showPage('play')">Play Now</button></div>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="page" id="page-lb">
+  <div class="section narrow">
+    <div class="lb-header">
+      <div><p class="sec-label">// Rankings</p><h2 class="sec-title" style="font-size:2rem;margin-bottom:0">Leaderboard</h2></div>
+      <button class="btn-ghost" style="font-size:0.7rem;padding:0.5rem 1rem" onclick="clearBoard()">Reset</button>
+    </div>
+    <div class="lb-row hdr"><span>#</span><span>Player</span><span>Score</span><span>Level</span></div>
+    <div id="lb-body"><div class="lb-empty">No scores yet — be the first to survive.</div></div>
+  </div>
+</div>
+
+<!-- CREDITS -->
+<div class="page" id="page-credits">
+  <div class="section" style="text-align:center;padding-top:5rem;padding-bottom:6rem">
+    <p class="sec-label">// Credits</p>
+    <h2 class="sec-title">Made by</h2>
+    <div style="height:2rem"></div>
+    <p class="credits-body">
+      Designed &amp; developed by <strong>You</strong><br>
+      Engine: vanilla HTML5 Canvas + Web Audio API<br>
+      Fonts: <a href="https://fonts.google.com/specimen/Creepster" target="_blank">Creepster</a> &amp; <a href="https://fonts.google.com/specimen/Share+Tech+Mono" target="_blank">Share Tech Mono</a><br>
+      Sound: procedural — no samples, fully synthesised<br>
+      Built with <a href="https://claude.ai" target="_blank">Claude</a>
+    </p>
+  </div>
+</div>
+
+<footer>
+  <span class="foot-logo">Something Is Here</span>
+  <span class="foot-copy">© 2026 — All rights reserved</span>
+</footer>
+
+<script>
+/* PAGE ROUTER */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='lb') renderLeaderboard();
+  if(id==='play') resizeCanvas();
+}
+function closeNav(){ document.getElementById('nav-links').classList.remove('open'); }
+document.getElementById('nav-toggle').addEventListener('click',()=>document.getElementById('nav-links').classList.toggle('open'));
+
+/* LEADERBOARD */
+function renderLeaderboard(){
+  const scores=JSON.parse(localStorage.getItem('sih_scores')||'[]');
+  const body=document.getElementById('lb-body');
+  if(!scores.length){body.innerHTML='<div class="lb-empty">No scores yet — be the first to survive.</div>';return;}
+  scores.sort((a,b)=>b.score-a.score);
+  body.innerHTML=scores.slice(0,10).map((s,i)=>`<div class="lb-row"><span class="lb-rank ${['gold','silver','bronze'][i]||''}">${i+1}</span><span class="lb-name">${s.name}</span><span class="lb-score">${s.score.toLocaleString()}</span><span class="lb-lv">Lv ${s.level}</span></div>`).join('');
+}
+function clearBoard(){if(confirm('Clear all scores?')){localStorage.removeItem('sih_scores');renderLeaderboard();}}
+function saveScore(name){
+  const scores=JSON.parse(localStorage.getItem('sih_scores')||'[]');
+  scores.push({name:name||'Unknown',score,level,date:Date.now()});
+  scores.sort((a,b)=>b.score-a.score);
+  localStorage.setItem('sih_scores',JSON.stringify(scores.slice(0,50)));
+}
+function doSubmit(inputId){saveScore(document.getElementById(inputId).value.trim());startGame();}
+
+/* GAME */
+const canvas=document.getElementById('gc');
+const ctx=canvas.getContext('2d');
+const wrap=document.getElementById('game-canvas-wrap');
+let W,H;
+function resizeCanvas(){W=wrap.clientWidth;H=wrap.clientHeight;canvas.width=W;canvas.height=H;}
+resizeCanvas();
+window.addEventListener('resize',()=>{resizeCanvas();if(gstate==='playing')buildMap();});
+
+let AC=null;
+function getAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
+function beep(freq,dur,vol,type){const ac=getAC(),o=ac.createOscillator(),g=ac.createGain();o.type=type||'sine';o.frequency.value=freq;g.gain.setValueAtTime(0,ac.currentTime);g.gain.linearRampToValueAtTime(vol||0.25,ac.currentTime+0.01);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+dur);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+dur);}
+function playHB(){beep(58,0.07,0.22,'sine');setTimeout(()=>beep(52,0.09,0.18,'sine'),110);}
+function playOrb(){[440,554,659].forEach((f,i)=>setTimeout(()=>beep(f,0.1,0.13,'triangle'),i*55));}
+function playCaught(){beep(110,0.45,0.45,'sawtooth');setTimeout(()=>beep(75,0.65,0.35,'sawtooth'),180);}
+function playLvl(){[330,440,554,659].forEach((f,i)=>setTimeout(()=>beep(f,0.14,0.1,'triangle'),i*75));}
+let ambiO=null,ambiG=null;
+function startAmbi(){if(ambiO)return;const ac=getAC();ambiO=ac.createOscillator();ambiG=ac.createGain();ambiO.type='sine';ambiO.frequency.value=48;ambiG.gain.value=0.035;ambiO.connect(ambiG);ambiG.connect(ac.destination);ambiO.start();}
+function stopAmbi(){if(ambiO){try{ambiO.stop();}catch(e){}ambiO=null;ambiG=null;}}
+
+let gstate='menu',score=0,level=1,sanity=100;
+let player=null,monster=null;
+let orbs=[],walls=[],rooms=[],darkZones=[],particles=[];
+let hbTimer=0,flashAlpha=0,raf=null,lastTs=0;
+const keys={},mk={up:0,down:0,left:0,right:0};
+
+const TILE=24;
+function buildMap(){
+  walls=[];rooms=[];darkZones=[];orbs=[];
+  const cols=Math.floor(W/TILE),rows=Math.floor(H/TILE);
+  const grid=Array.from({length:rows},()=>Array(cols).fill(1));
+  const defs=[{c:1,r:1,w:8,h:6},{c:11,r:1,w:8,h:6},{c:21,r:1,w:8,h:6},{c:1,r:9,w:6,h:6},{c:9,r:9,w:10,h:6},{c:21,r:9,w:7,h:6},{c:1,r:17,w:8,h:6},{c:12,r:17,w:8,h:6},{c:22,r:17,w:7,h:6}];
+  const mC=cols-2,mR=rows-2;
+  for(const d of defs){
+    const rc=Math.min(d.c,mC-d.w),rr=Math.min(d.r,mR-d.h);
+    const rw=Math.min(d.w,mC-rc),rh=Math.min(d.h,mR-rr);
+    if(rw<2||rh<2)continue;
+    rooms.push({x:rc*TILE,y:rr*TILE,w:rw*TILE,h:rh*TILE});
+    for(let y=rr;y<rr+rh&&y<rows;y++)for(let x=rc;x<rc+rw&&x<cols;x++)grid[y][x]=0;
+  }
+  function carve(c1,r1,c2,r2){let x=c1,y=r1;while(x!==c2){if(y>=0&&y<rows&&x>=0&&x<cols)grid[y][x]=0;x+=x<c2?1:-1;}while(y!==r2){if(y>=0&&y<rows&&x>=0&&x<cols)grid[y][x]=0;y+=y<r2?1:-1;}}
+  carve(5,4,15,4);carve(15,4,25,4);carve(4,7,4,12);carve(13,7,13,12);carve(24,7,24,12);carve(4,15,4,20);carve(16,15,16,20);carve(25,15,25,20);carve(5,12,19,12);carve(4,20,26,20);
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)if(grid[r][c]===1)walls.push({x:c*TILE,y:r*TILE});
+  for(const rm of rooms){darkZones.push({x:rm.x+2,y:rm.y+2,w:rm.w*0.38,h:rm.h*0.4});darkZones.push({x:rm.x+rm.w*0.62,y:rm.y+rm.h*0.58,w:rm.w*0.35,h:rm.h*0.38});}
+  const orbCount=5+level*2,ref=player||{x:W/2,y:H/2};
+  let placed=0,tries=0;
+  while(placed<orbCount&&tries<600){tries++;const ox=Math.random()*(W-TILE*2)+TILE,oy=Math.random()*(H-TILE*2)+TILE;if(!isWall(ox,oy,8)&&((ox-ref.x)**2+(oy-ref.y)**2)>8100){orbs.push({x:ox,y:oy,r:5,pulse:Math.random()*Math.PI*2,collected:false});placed++;}}
+}
+
+function isWall(x,y,r){r=r||5;if(x-r<0||x+r>W||y-r<0||y+r>H)return true;for(const w of walls)if(x+r>w.x&&x-r<w.x+TILE&&y+r>w.y&&y-r<w.y+TILE)return true;return false;}
+function inDark(x,y){for(const d of darkZones)if(x>d.x&&x<d.x+d.w&&y>d.y&&y<d.y+d.h)return true;return false;}
+function de(a,b){return Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2);}
+function lineBlocked(x1,y1,x2,y2){const steps=Math.ceil(Math.hypot(x2-x1,y2-y1)/8);for(let i=1;i<steps;i++){const t=i/steps,lx=x1+(x2-x1)*t,ly=y1+(y2-y1)*t;for(const w of walls)if(lx>w.x&&lx<w.x+TILE&&ly>w.y&&ly<w.y+TILE)return true;}return false;}
+function spawnParts(x,y,col){for(let i=0;i<8;i++){const a=Math.random()*Math.PI*2,s=0.6+Math.random()*2.5;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,col,r:2+Math.random()*3});}}
+
+// ── A* Pathfinding ──────────────────────────────────────────────────────────
+function worldToGrid(x,y){return{c:Math.floor(x/TILE),r:Math.floor(y/TILE)};}
+function gridToWorld(c,r){return{x:c*TILE+TILE/2,y:r*TILE+TILE/2};}
+function gridWalkable(c,r){
+  if(c<0||r<0||c>=Math.floor(W/TILE)||r>=Math.floor(H/TILE))return false;
+  const wx=c*TILE+TILE/2,wy=r*TILE+TILE/2;
+  return !isWall(wx,wy,TILE*0.45);
+}
+function aStar(sx,sy,tx,ty){
+  const sc=Math.floor(sx/TILE),sr=Math.floor(sy/TILE);
+  const tc=Math.floor(tx/TILE),tr=Math.floor(ty/TILE);
+  if(sc===tc&&sr===tr)return[];
+  const cols=Math.floor(W/TILE),rows=Math.floor(H/TILE);
+  const key=(c,r)=>r*cols+c;
+  const h=(c,r)=>Math.abs(c-tc)+Math.abs(r-tr);
+  const open=new Map();
+  const closed=new Set();
+  const cameFrom=new Map();
+  const gScore=new Map();
+  const start=key(sc,sr);
+  gScore.set(start,0);
+  open.set(start,{c:sc,r:sr,f:h(sc,sr)});
+  const DIRS=[{dc:0,dr:-1},{dc:0,dr:1},{dc:-1,dr:0},{dc:1,dr:0},{dc:-1,dr:-1},{dc:1,dr:-1},{dc:-1,dr:1},{dc:1,dr:1}];
+  let iters=0;
+  while(open.size>0&&iters++<800){
+    let bestK=null,bestF=Infinity;
+    for(const[k,v]of open){if(v.f<bestF){bestF=v.f;bestK=k;}}
+    const cur=open.get(bestK);
+    if(cur.c===tc&&cur.r===tr){
+      const path=[];let k=bestK;
+      while(cameFrom.has(k)){const n=cameFrom.get(k);path.unshift(gridToWorld(n.c,n.r));k=key(n.c,n.r);}
+      path.push(gridToWorld(tc,tr));
+      return path;
+    }
+    open.delete(bestK);closed.add(bestK);
+    for(const{dc,dr}of DIRS){
+      const nc=cur.c+dc,nr=cur.r+dr;
+      if(!gridWalkable(nc,nr))continue;
+      if(dc!==0&&dr!==0&&(!gridWalkable(cur.c+dc,cur.r)||!gridWalkable(cur.c,cur.r+dr)))continue;
+      const nk=key(nc,nr);
+      if(closed.has(nk))continue;
+      const cost=dc!==0&&dr!==0?1.414:1;
+      const ng=(gScore.get(bestK)||0)+cost;
+      if(!gScore.has(nk)||ng<gScore.get(nk)){
+        gScore.set(nk,ng);
+        cameFrom.set(nk,{c:cur.c,r:cur.r});
+        open.set(nk,{c:nc,r:nr,f:ng+h(nc,nr)});
+      }
+    }
+  }
+  return [];
+}
+
+// ── Monster AI ──────────────────────────────────────────────────────────────
+function monsterThink(dt){
+  const m=monster,p=player;
+  const dx=p.x-m.x,dy=p.y-m.y,d=Math.sqrt(dx*dx+dy*dy);
+  const canSee=d<m.sight&&!p.hidden&&!lineBlocked(m.x,m.y,p.x,p.y);
+
+  // State transitions
+  if(canSee){
+    m.alert=Math.min(1,m.alert+dt*2.2);
+    m.lkx=p.x;m.lky=p.y;
+    m.mstate='chase';
+    m.pathTimer=0; // force path recalc immediately when sighting
+  } else {
+    m.alert=Math.max(0,m.alert-dt*0.4);
+    if(m.mstate==='chase'&&m.alert>0) m.mstate='search';
+    else if(m.alert<=0&&m.mstate!=='patrol') m.mstate='patrol';
+  }
+
+  // Recalculate A* path on a timer
+  m.pathTimer=(m.pathTimer||0)-dt;
+  if(m.pathTimer<=0){
+    const recalcRate = m.mstate==='chase'?0.25:m.mstate==='search'?0.6:1.8;
+    m.pathTimer=recalcRate;
+    if(m.mstate==='chase'||m.mstate==='search'){
+      const tx=m.mstate==='chase'?p.x:m.lkx;
+      const ty=m.mstate==='chase'?p.y:m.lky;
+      m.path=aStar(m.x,m.y,tx,ty);
+      m.pathIdx=0;
+    } else {
+      // Patrol: pick a random walkable tile in a nearby room
+      if(!m.path||m.path.length===0||m.pathIdx>=m.path.length){
+        const pr=rooms[Math.floor(Math.random()*rooms.length)];
+        if(pr){
+          let px=pr.x+14+Math.random()*(pr.w-28);
+          let py=pr.y+14+Math.random()*(pr.h-28);
+          for(let t=0;t<30;t++){if(!isWall(px,py,10))break;px=pr.x+14+Math.random()*(pr.w-28);py=pr.y+14+Math.random()*(pr.h-28);}
+          m.path=aStar(m.x,m.y,px,py);
+          m.pathIdx=0;
+        }
+      }
+    }
+  }
+
+  // Follow path
+  let spd = m.mstate==='chase'? m.spd*(1.6+m.alert*1.4):
+            m.mstate==='search'? m.spd*0.85 : m.spd*0.5;
+
+  if(m.path&&m.path.length>0&&m.pathIdx<m.path.length){
+    const wp=m.path[m.pathIdx];
+    const wdx=wp.x-m.x,wdy=wp.y-m.y,wd=Math.sqrt(wdx*wdx+wdy*wdy);
+    if(wd<TILE*0.6) m.pathIdx++;
+    else {
+      const move=Math.min(spd,wd);
+      const nx=m.x+wdx/wd*move,ny=m.y+wdy/wd*move;
+      m.angle=Math.atan2(wdy,wdx);
+      if(!isWall(nx,m.y,m.r)) m.x=nx;
+      if(!isWall(m.x,ny,m.r)) m.y=ny;
+    }
+  } else {
+    // Path exhausted in search — go back to patrol
+    if(m.mstate==='search') m.mstate='patrol';
+  }
+
+  m.x=Math.max(m.r,Math.min(W-m.r,m.x));
+  m.y=Math.max(m.r,Math.min(H-m.r,m.y));
+}
+
+let lastTs2=0;
+function update(ts){
+  const dt=Math.min((ts-lastTs2)/1000,0.05);lastTs2=ts;
+  if(gstate!=='playing'||!player||!monster)return;
+  let dx=(keys['ArrowLeft']||keys['a']||keys['A']||mk.left)?-1:(keys['ArrowRight']||keys['d']||keys['D']||mk.right)?1:0;
+  let dy=(keys['ArrowUp']||keys['w']||keys['W']||mk.up)?-1:(keys['ArrowDown']||keys['s']||keys['S']||mk.down)?1:0;
+  if(dx||dy){const l=Math.hypot(dx,dy),s=player.spd,nx=player.x+dx/l*s,ny=player.y+dy/l*s;if(!isWall(nx,player.y,player.r))player.x=nx;if(!isWall(player.x,ny,player.r))player.y=ny;}
+  player.hidden=inDark(player.x,player.y);
+  for(const o of orbs){if(!o.collected&&de(player,o)<player.r+o.r+2){o.collected=true;score+=10*level;document.getElementById('h-score').textContent=score;spawnParts(o.x,o.y,'#7F77DD');playOrb();}o.pulse+=0.06;}
+  if(orbs.every(o=>o.collected)){
+    level++;playLvl();document.getElementById('h-level').textContent=level;
+    buildMap();
+    const ps=safeTile(null,0);
+    player.x=ps.x;player.y=ps.y;
+    const ms=farthestRoomTile(player);
+    monster.x=ms.x;monster.y=ms.y;
+    monster.spd=1.2+level*0.1;monster.sight=115+level*12;monster.alert=0;monster.mstate='patrol';monster.path=[];monster.pathIdx=0;monster.pathTimer=0;
+    orbs=[];
+    const orbCount=5+level*2;let placed=0,tries=0;
+    while(placed<orbCount&&tries<600){tries++;const ox=TILE+Math.random()*(W-TILE*2),oy=TILE+Math.random()*(H-TILE*2);if(!isWall(ox,oy,8)&&Math.hypot(ox-player.x,oy-player.y)>90){orbs.push({x:ox,y:oy,r:5,pulse:Math.random()*Math.PI*2,collected:false});placed++;}}
+    return;
+  }
+  monsterThink(dt);
+  particles=particles.filter(p=>p.life>0);
+  particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.05;p.life-=0.04;});
+  const prox=Math.max(0,1-de(player,monster)/monster.sight);
+  if(!player.hidden)sanity=Math.max(0,sanity-prox*dt*20);else sanity=Math.min(100,sanity+dt*4);
+  const sp=Math.round(sanity),sc=sanity/100;
+  document.getElementById('san-fill').style.width=sp+'%';
+  document.getElementById('san-fill').style.background=`rgb(${Math.round((1-sc)*200+83)},${Math.round(sc*60+10)},${Math.round(sc*180+10)})`;
+  hbTimer-=dt;if(hbTimer<=0){playHB();hbTimer=0.28+sc*1.5;}
+  flashAlpha=Math.max(0,flashAlpha-dt*3.5);
+  if(de(player,monster)<player.r+monster.r){playCaught();flashAlpha=1;gameover('caught');return;}
+  if(sanity<=0){playCaught();flashAlpha=1;gameover('sanity');}
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#04040a';ctx.fillRect(0,0,W,H);
+  if(!monster||!player)return;
+  for(const w of walls){ctx.fillStyle='#0d0d18';ctx.fillRect(w.x,w.y,TILE,TILE);ctx.strokeStyle='#10101e';ctx.lineWidth=0.5;ctx.strokeRect(w.x,w.y,TILE,TILE);}
+  for(const d of darkZones){ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(d.x,d.y,d.w,d.h);}
+  for(const o of orbs){if(o.collected)continue;const p=Math.sin(o.pulse)*0.35+0.65;ctx.save();ctx.globalAlpha=p*0.3;ctx.fillStyle='#7F77DD';ctx.beginPath();ctx.arc(o.x,o.y,o.r*2.4,0,Math.PI*2);ctx.fill();ctx.globalAlpha=p;ctx.fillStyle='#AFA9EC';ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fill();ctx.restore();}
+  for(const p of particles){ctx.save();ctx.globalAlpha=p.life*0.85;ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.restore();}
+  const m=monster,ag=m.alert;
+  ctx.save();ctx.globalAlpha=0.1+ag*0.22;ctx.fillStyle=ag>0.45?'#b03020':'#5a0808';ctx.beginPath();ctx.arc(m.x,m.y,m.r*3.5+ag*18,0,Math.PI*2);ctx.fill();ctx.restore();
+  if(ag>0.08){ctx.save();ctx.globalAlpha=ag*0.14;ctx.strokeStyle='#c0392b';ctx.lineWidth=1;ctx.setLineDash([3,7]);ctx.beginPath();ctx.arc(m.x,m.y,m.sight,m.angle-0.5,m.angle+0.5);ctx.stroke();ctx.restore();}
+  ctx.fillStyle=ag>0.4?'#280404':'#130202';ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,Math.PI*2);ctx.fill();
+  [-0.3,0.3].forEach(off=>{const ex=m.x+Math.cos(m.angle+off)*m.r*0.55,ey=m.y+Math.sin(m.angle+off)*m.r*0.55;ctx.fillStyle=ag>0.3?'#E24B4A':'#7a2222';ctx.beginPath();ctx.arc(ex,ey,3.5,0,Math.PI*2);ctx.fill();if(ag>0.5){ctx.save();ctx.globalAlpha=ag*0.45;ctx.fillStyle='#ff5555';ctx.beginPath();ctx.arc(ex,ey,6,0,Math.PI*2);ctx.fill();ctx.restore();}});
+  if(m.mstate==='chase'){ctx.save();ctx.fillStyle='#E24B4A';ctx.font='bold 13px monospace';ctx.textAlign='center';ctx.fillText('!',m.x,m.y-m.r-5);ctx.restore();}
+  ctx.fillStyle=player.hidden?'#2a2a3a':'#9FE1CB';ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,Math.PI*2);ctx.fill();
+  if(!player.hidden){ctx.save();ctx.globalAlpha=0.35+Math.sin(Date.now()*0.007)*0.1;ctx.strokeStyle='#5DCAA5';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(player.x,player.y,player.r+5,0,Math.PI*2);ctx.stroke();ctx.restore();}
+  if(flashAlpha>0){ctx.save();ctx.globalAlpha=flashAlpha*0.5;ctx.fillStyle='#c0392b';ctx.fillRect(0,0,W,H);ctx.restore();}
+}
+
+function loop(ts){update(ts);draw();raf=requestAnimationFrame(loop);}
+
+function showGov(id){document.querySelectorAll('.gov').forEach(g=>g.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
+function hideAllGov(){document.querySelectorAll('.gov').forEach(g=>g.classList.add('hidden'));}
+
+function farthestRoomTile(fromPos){
+  if(!rooms||rooms.length===0) return safeTile(fromPos, Math.min(W,H)*0.4);
+  // Sort rooms by distance from player, pick the farthest
+  const sorted=[...rooms].sort((a,b)=>{
+    const da=Math.hypot((a.x+a.w/2)-fromPos.x,(a.y+a.h/2)-fromPos.y);
+    const db=Math.hypot((b.x+b.w/2)-fromPos.x,(b.y+b.h/2)-fromPos.y);
+    return db-da;
+  });
+  // Try up to 3 farthest rooms, find a clear spot inside
+  for(const rm of sorted.slice(0,3)){
+    for(let tries=0;tries<80;tries++){
+      const x=rm.x+14+Math.random()*(rm.w-28);
+      const y=rm.y+14+Math.random()*(rm.h-28);
+      if(!isWall(x,y,14)) return {x,y};
+    }
+  }
+  // Fallback to generic safe tile
+  return safeTile(fromPos, Math.min(W,H)*0.4);
+}
+
+function safeTile(minDistFrom, minDist){
+  for(let tries=0;tries<500;tries++){
+    const x=TILE+Math.random()*(W-TILE*2);
+    const y=TILE+Math.random()*(H-TILE*2);
+    if(isWall(x,y,14)) continue;
+    if(minDistFrom && Math.hypot(x-minDistFrom.x,y-minDistFrom.y)<minDist) continue;
+    return {x,y};
+  }
+  return {x:W/2,y:H/2};
+}
+
+function startGame(){
+  score=0;level=1;sanity=100;particles=[];
+  document.getElementById('h-score').textContent='0';
+  document.getElementById('h-level').textContent='1';
+  document.getElementById('san-fill').style.width='100%';
+  hideAllGov();
+  // Build map first with placeholder player so isWall works
+  player={x:TILE*3,y:TILE*3,r:7,spd:2.7,hidden:false};
+  monster=null;
+  buildMap();
+  // Now safe-place player and monster using the built walls
+  const ps=safeTile(null,0);
+  player={x:ps.x,y:ps.y,r:7,spd:2.7,hidden:false};
+  const ms=farthestRoomTile(player);
+  monster={x:ms.x,y:ms.y,r:13,spd:1.2+level*0.1,sight:115+level*12,angle:Math.PI,alert:0,mstate:'patrol',wa:Math.PI,wt:2,lkx:0,lky:0,path:[],pathIdx:0,pathTimer:0};
+  // Re-place orbs now that player position is finalised
+  orbs=[];
+  const orbCount=5+level*2;
+  let placed=0,tries=0;
+  while(placed<orbCount&&tries<600){
+    tries++;
+    const ox=TILE+Math.random()*(W-TILE*2),oy=TILE+Math.random()*(H-TILE*2);
+    if(!isWall(ox,oy,8)&&Math.hypot(ox-player.x,oy-player.y)>90){
+      orbs.push({x:ox,y:oy,r:5,pulse:Math.random()*Math.PI*2,collected:false});
+      placed++;
+    }
+  }
+  startAmbi();
+  gstate='playing';lastTs2=performance.now();
+  if(!raf)raf=requestAnimationFrame(loop);
+}
+
+function gameover(reason){
+  gstate='dead';stopAmbi();
+  if(reason==='caught'){document.getElementById('gs-caught').textContent=score;document.getElementById('gl-caught').textContent=level;showGov('gov-caught');}
+  else{document.getElementById('gs-sanity').textContent=score;document.getElementById('gl-sanity').textContent=level;showGov('gov-sanity');}
+}
+function togglePause(){
+  if(gstate==='playing') pauseGame();
+  else if(gstate==='paused') resumeGame();
+}
+function pauseGame(){
+  if(gstate!=='playing') return;
+  gstate='paused';
+  stopAmbi();
+  showGov('gov-pause');
+  document.getElementById('pause-btn').textContent='Resume';
+}
+function resumeGame(){
+  if(gstate!=='paused') return;
+  gstate='playing';
+  startAmbi();
+  hideAllGov();
+  document.getElementById('pause-btn').textContent='Pause';
+  lastTs2=performance.now();
+}
+function goMenu(){gstate='menu';stopAmbi();showGov('gov-menu');document.getElementById('pause-btn').textContent='Pause';}
+
+window.addEventListener('keydown',e=>{
+  keys[e.key]=true;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();
+  if(e.key==='Escape'){e.preventDefault();togglePause();}
+  getAC();
+});
+window.addEventListener('keyup',e=>{keys[e.key]=false;});
+
+function bindDpad(id,dir){
+  const el=document.getElementById(id);
+  el.addEventListener('touchstart',e=>{e.preventDefault();mk[dir]=1;el.classList.add('pressed');},{passive:false});
+  el.addEventListener('touchend',e=>{e.preventDefault();mk[dir]=0;el.classList.remove('pressed');},{passive:false});
+  el.addEventListener('mousedown',()=>{mk[dir]=1;el.classList.add('pressed');});
+  el.addEventListener('mouseup',()=>{mk[dir]=0;el.classList.remove('pressed');});
+  el.addEventListener('mouseleave',()=>{mk[dir]=0;el.classList.remove('pressed');});
+}
+bindDpad('dp-up','up');bindDpad('dp-down','down');bindDpad('dp-left','left');bindDpad('dp-right','right');
+
+raf=requestAnimationFrame(loop);
+</script>
+</body>
+</html>
